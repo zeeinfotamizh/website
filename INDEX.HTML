@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zee Info Tamizh</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  color:white;
+  background: linear-gradient(-45deg,#050b14,#071a24,#0b2230,#050b14);
+  background-size:400% 400%;
+  animation:bgMove 10s infinite alternate;
+}
+
+@keyframes bgMove{
+  0%{background-position:0% 50%}
+  100%{background-position:100% 50%}
+}
+
+header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:15px;
+  background:#071a24;
+  border-bottom:2px solid #ff7a18;
+}
+
+header img{
+  width:50px;
+  height:50px;
+  border-radius:10px;
+}
+
+header h1{
+  font-size:20px;
+  color:#00d4c7;
+}
+
+/* LOADING SCREEN */
+#loadingScreen{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#050b14;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+
+.logoShow{
+  width:120px;   /* 🔥 BIGGER LOGO */
+  height:120px;
+  border-radius:20px;
+  animation:fade 1s ease-in;
+}
+
+.loader{
+  width:25px;   /* 🔥 SMALLER SPINNER */
+  height:25px;
+  border:3px solid #333;
+  border-top:3px solid #ff7a18;
+  border-radius:50%;
+  margin-top:15px;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+
+@keyframes fade{
+  from{opacity:0;transform:scale(0.8)}
+  to{opacity:1;transform:scale(1)}
+}
+
+.container{padding:20px;}
+
+.intro{
+  background:#0b2230;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:15px;
+  border-left:4px solid #00d4c7;
+  line-height:1.6;
+}
+
+.card{
+  background:#0b2230;
+  padding:15px;
+  margin:10px 0;
+  border-left:4px solid #ff7a18;
+  border-radius:10px;
+}
+
+.card img{
+  width:100%;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.date{
+  font-size:12px;
+  color:#aaa;
+  margin-bottom:5px;
+}
+
+button,input,textarea{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border:none;
+  border-radius:6px;
+}
+
+button{
+  background:#ff7a18;
+  color:white;
+  font-weight:bold;
+}
+
+.hidden{display:none;}
+
+.join{
+  display:inline-block;
+  background:#25D366;
+  padding:10px 15px;
+  color:white;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <img src="https://i.postimg.cc/155RJS2H/Adobe-Express-file.png">
+  <h1>Zee Info Tamizh</h1>
+</header>
+
+<!-- 🔥 LOADING SCREEN -->
+<div id="loadingScreen">
+  <img class="logoShow" src="https://i.postimg.cc/155RJS2H/Adobe-Express-file.png">
+  <div class="loader"></div>
+</div>
+
+<div class="container">
+
+<div class="intro">
+✨ Zee Info Tamizh-க்கு வரவேற்கிறோம்! 🧠🤍✨<br>
+உங்களை ஆச்சரியப்படுத்தும் தகவல்கள் ⚡<br>
+முக்கியமான செய்திகள் 📰<br>
+சிந்திக்க வைக்கும் எண்ணங்கள் 💭<br>
+அனைத்தும் ஒரே இடத்தில்!!!
+</div>
+
+<a class="join" href="https://chat.whatsapp.com/JLgXTGVw5YpL07BS1x5shA" target="_blank">
+Join WhatsApp
+</a>
+
+<h2>Latest Info</h2>
+<div id="newsArea"></div>
+
+<!-- LOGIN -->
+<div id="emailBox">
+  <h3>Sign In</h3>
+  <input id="email" placeholder="Enter Email">
+  <button onclick="checkEmail()">Next</button>
+</div>
+
+<div id="nameBox" class="hidden">
+  <h3>Enter Name</h3>
+  <input id="name">
+  <button onclick="enterSite()">Enter</button>
+</div>
+
+<div id="adminBox" class="hidden">
+  <h3>Admin Password</h3>
+  <input id="adminPass" type="password">
+  <button onclick="checkAdmin()">Login</button>
+</div>
+
+<!-- ADMIN -->
+<div id="adminPanel" class="hidden">
+  <h3>Post Info</h3>
+
+  <input type="date" id="dateInput">
+  <input id="title" placeholder="Title">
+  <input type="file" id="imageInput" accept="image/*">
+  <textarea id="content" placeholder="Content"></textarea>
+
+  <button onclick="postNews()">Publish</button>
+</div>
+
+</div>
+
+<script>
+
+const ADMIN_EMAIL="zahrafathimathuz876@gmail.com";
+const ADMIN_PASSWORD="ZeE05ZaH#25";
+
+function formatDate(dateStr){
+  let d=new Date(dateStr);
+  let day=String(d.getDate()).padStart(2,'0');
+  let month=String(d.getMonth()+1).padStart(2,'0');
+  let year=d.getFullYear();
+  return `${day}-${month}-${year}`;
+}
+
+function checkEmail(){
+  let email=document.getElementById("email").value;
+
+  document.getElementById("emailBox").classList.add("hidden");
+
+  if(email===ADMIN_EMAIL){
+    document.getElementById("adminBox").classList.remove("hidden");
+  }else{
+    document.getElementById("nameBox").classList.remove("hidden");
+  }
+}
+
+function enterSite(){
+  document.getElementById("nameBox").classList.add("hidden");
+  showLoading(false);
+}
+
+function checkAdmin(){
+  let pass=document.getElementById("adminPass").value;
+
+  if(pass===ADMIN_PASSWORD){
+    document.getElementById("adminBox").classList.add("hidden");
+    showLoading(true);
+  }else{
+    alert("Wrong Password!");
+  }
+}
+
+/* 🔥 LOADING */
+function showLoading(isAdmin){
+  let load=document.getElementById("loadingScreen");
+  load.style.display="flex";
+
+  setTimeout(()=>{
+    load.style.display="none";
+    alert("Welcome to Zee Info Tamizh!");
+
+    if(isAdmin){
+      document.getElementById("adminPanel").classList.remove("hidden");
+    }
+  },5000);
+}
+
+/* NEWS */
+let posts=JSON.parse(localStorage.getItem("posts"))||[];
+
+function render(){
+  let html="";
+
+  posts.forEach(p=>{
+    html+=`
+      <div class='card'>
+        <div class="date">📅 ${formatDate(p.date)}</div>
+        <h3>${p.title}</h3>
+        <p>${p.content}</p>
+        ${p.image?`<img src="${p.image}">`:""}
+      </div>
+    `;
+  });
+
+  document.getElementById("newsArea").innerHTML=html;
+}
+
+function postNews(){
+  let date=document.getElementById("dateInput").value;
+  let title=document.getElementById("title").value;
+  let content=document.getElementById("content").value;
+  let file=document.getElementById("imageInput").files[0];
+
+  if(file){
+    let reader=new FileReader();
+    reader.onload=function(e){
+      save(date,title,content,e.target.result);
+    };
+    reader.readAsDataURL(file);
+  }else{
+    save(date,title,content,null);
+  }
+}
+
+function save(date,title,content,image){
+  posts.unshift({date,title,content,image});
+  localStorage.setItem("posts",JSON.stringify(posts));
+  render();
+  alert("Published!");
+}
+
+render();
+
+</script>
+
+</body>
+</html>
